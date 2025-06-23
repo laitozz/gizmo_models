@@ -17,6 +17,7 @@ encoder_radius = 8 / 2;
 encoder_num_x = 5;
 encoder_num_y = 2;
 encoder_padding = 40;
+encoder_offset = 10;
 
 dirs = [
     1,
@@ -49,8 +50,7 @@ module encoder_holes(n_x, n_y) {
     space_x = plate_x - encoder_padding*2;
     for (i = [0 : n_x-1]) {
         for (j = [1 : n_y]) {
-            y_off = j * (space_y / (n_y)) - space_y / 2;
-            echo(y_off);
+            y_off = j * (space_y / (n_y)) - space_y / 2 - encoder_offset;
             x_off = i * (space_x / (n_x-1)) - space_x / 2;
             xy_pin(x_off, y_off, encoder_radius);
         }
