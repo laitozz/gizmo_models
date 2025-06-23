@@ -3,12 +3,20 @@ plate_length = 400;
 plate_width = 240;
 plate_thickness = 10;
 corner_radius = 20;
+plate_x = plate_length - 2*corner_radius;
+plate_y = plate_width - 2*corner_radius;
 
 // Pin and hole dimensions
 pin_radius = 6 / 2;
 pin_height = 10;
 hole_radius = 6 / 2;
 pin_hole_spacing = 15;
+
+// Encoder dimensions
+encoder_radius = 8 / 2;
+encoder_num_x = 5;
+encoder_num_y = 2;
+encoder_padding = 40;
 
 dirs = [
     1,
@@ -36,6 +44,18 @@ module xy_pin(x, y, r) {
     );
 }
 
+module encoder_holes(n_x, n_y) {
+    space_y = plate_y - encoder_padding*2;
+    space_x = plate_x - encoder_padding*2;
+    for (i = [0 : n_x-1]) {
+        for (j = [1 : n_y]) {
+            y_off = j * (space_y / (n_y)) - space_y / 2;
+            echo(y_off);
+            x_off = i * (space_x / (n_x-1)) - space_x / 2;
+            xy_pin(x_off, y_off, encoder_radius);
+        }
+    }
+}
 
 pin_x = (plate_length - 2*corner_radius)/2;
 pin_y = (plate_width - 2*corner_radius)/2;
@@ -66,4 +86,7 @@ difference() {
     {
         xy_pin(0, dir * hole_y, pin_radius);
     }
+    // Cutouts for rotary encoders
+    encoder_holes(encoder_num_x, encoder_num_y);
+    
 }
