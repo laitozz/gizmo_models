@@ -10,7 +10,7 @@ pin_height = 10;
 hole_radius = 6 / 2;
 pin_hole_spacing = 15;
 
-dims = [
+dirs = [
     1,
 	-1,
 	-1,
@@ -37,9 +37,9 @@ module xy_pin(x, y, r) {
 }
 
 
-dir_x = (plate_length - 2*corner_radius)/2;
-dir_y = (plate_width - 2*corner_radius)/2;
-hole_y = dir_y - pin_hole_spacing;
+pin_x = (plate_length - 2*corner_radius)/2;
+pin_y = (plate_width - 2*corner_radius)/2;
+hole_y = pin_y - pin_hole_spacing;
 // Draw the plate
 difference() {
     union() {
@@ -47,23 +47,23 @@ difference() {
         rounded_plate(plate_length, plate_width, plate_thickness, corner_radius);
         
         // The pins
-		for (i = [0 : 1 : len(dims)-2])
+		for (i = [0 : 1 : len(dirs)-2])
         {
-            xy_pin(dims[i] * dir_x, dims[i+1] * dir_y, pin_radius);
+            xy_pin(dirs[i] * pin_x, dirs[i+1] * pin_y, pin_radius);
         }
-        for (dim = [1, -1])
+        for (dir = [1, -1])
         {
-            xy_pin(0, dim * dir_y, pin_radius);
+            xy_pin(0, dir * pin_y, pin_radius);
         }
     }
 
     // The holes
-	for (i = [0 : 1 : len(dims)-2])
+	for (i = [0 : 1 : len(dirs)-2])
 	{
-        xy_pin(dims[i] * dir_x, dims[i+1] * hole_y, pin_radius);
+        xy_pin(dirs[i] * pin_x, dirs[i+1] * hole_y, pin_radius);
 	}        
-    for (dim = [1, -1])
+    for (dir = [1, -1])
     {
-        xy_pin(0, dim * hole_y, pin_radius);
+        xy_pin(0, dir * hole_y, pin_radius);
     }
 }
