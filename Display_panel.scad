@@ -76,14 +76,24 @@ module light_slits(n) {
     }
 }
 
-// Draw the plate
-difference() {
-    union() {
-        // The base plate
-        rounded_plate(plate_length, plate_width, plate_thickness, corner_radius);
-        // The pins
-        edge_pins(num_pins_x, num_pins_y, pin_radius, false);
+
+module display() {
+    difference() {
+        union() {
+            // The base plate
+            rounded_plate(plate_length, plate_width, plate_thickness, corner_radius);
+            // The pins
+            edge_pins(num_pins_x, num_pins_y, pin_radius, false);
+        }
+        edge_pins(num_pins_x, num_pins_y, pin_radius, true);
+        light_slits(5);
     }
-    edge_pins(num_pins_x, num_pins_y, pin_radius, true);
-    light_slits(5);
+}
+
+// Draw the plate
+display();
+
+!projection(cut=true) {
+    translate([0, 0, -5])
+    display();
 }

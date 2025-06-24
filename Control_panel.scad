@@ -61,32 +61,37 @@ pin_x = (plate_length - 2*corner_radius)/2;
 pin_y = (plate_width - 2*corner_radius)/2;
 hole_y = pin_y - pin_hole_spacing;
 // Draw the plate
-difference() {
-    union() {
-        // The base plate
-        rounded_plate(plate_length, plate_width, plate_thickness, corner_radius);
-        
-        // The pins
-		for (i = [0 : 1 : len(dirs)-2])
-        {
-            xy_pin(dirs[i] * pin_x, dirs[i+1] * pin_y, pin_radius);
+module control() {
+    
+    difference() {
+        union() {
+            // The base plate
+            rounded_plate(plate_length, plate_width, plate_thickness, corner_radius);
+            
+            // The pins
+            for (i = [0 : 1 : len(dirs)-2])
+            {
+                xy_pin(dirs[i] * pin_x, dirs[i+1] * pin_y, pin_radius);
+            }
+            for (dir = [1, -1])
+            {
+                xy_pin(0, dir * pin_y, pin_radius);
+            }
         }
+
+        // The holes
+        for (i = [0 : 1 : len(dirs)-2])
+        {
+            xy_pin(dirs[i] * pin_x, dirs[i+1] * hole_y, pin_radius);
+        }        
         for (dir = [1, -1])
         {
-            xy_pin(0, dir * pin_y, pin_radius);
+            xy_pin(0, dir * hole_y, pin_radius);
         }
+        // Cutouts for rotary encoders
+        encoder_holes(encoder_num_x, encoder_num_y);
+        
     }
-
-    // The holes
-	for (i = [0 : 1 : len(dirs)-2])
-	{
-        xy_pin(dirs[i] * pin_x, dirs[i+1] * hole_y, pin_radius);
-	}        
-    for (dir = [1, -1])
-    {
-        xy_pin(0, dir * hole_y, pin_radius);
-    }
-    // Cutouts for rotary encoders
-    encoder_holes(encoder_num_x, encoder_num_y);
-    
 }
+
+control();
