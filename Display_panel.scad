@@ -92,8 +92,3 @@ module display() {
 
 // Draw the plate
 display();
-
-!projection(cut=true) {
-    translate([0, 0, -5])
-    display();
-}
